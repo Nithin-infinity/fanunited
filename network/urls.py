@@ -15,7 +15,7 @@ urlpatterns = [
     path("like-post/<int:id>/", views.likePostView, name="likePost"),
     path("delete-post/<int:id>/", views.deletePost, name="deletePost"),
     path("edit-post/<int:id>/", views.editPost, name="editPost"),
-    path("follow/<int:id>/", views.follow, name="follow"),
+    path("profile/<int:id>/follow", views.follow, name="follow"),
     path('profile/<int:id>/password-rest/', views.passwordReset, name='passwordRest'),
     path("like-comment/<int:id>/", views.likeCommentView, name="likeComment"),
 

@@ -131,7 +131,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = 'static/images/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 # STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'static'),
+#     os.path.join(BASE_DIR, 'network/static'),
 # ]
 
 AWS_ACCESS_KEY_ID = 'AKIAQJQBAD5S7TKI3WUG'
