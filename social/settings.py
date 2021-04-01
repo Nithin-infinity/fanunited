@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'zoel8(5-04y3!ti-2jds-80mh^$89(0wv@ec_lv1jl@0(d_m^v'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['fanunited.herokuapp.com', '127.0.0.1']
 
