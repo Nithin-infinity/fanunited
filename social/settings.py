@@ -83,11 +83,10 @@ DATABASES = {
         'NAME': 'NetworkDatabase',
         'USER' : 'Nithin',
         'PASSWORD' : 'Paul17dirac',
-        'HOST' : 'database-1.cxi9qv8yer9s.us-east-2.rds.amazonaws.com',
+        'HOST' : 'database-1.clyyi9s8y5ma.ap-south-1.rds.amazonaws.com',
         'PORT' : '5432'
     }
 }
-
 AUTH_USER_MODEL = 'network.User'
 
 # Password validation
