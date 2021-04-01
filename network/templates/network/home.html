@@ -1,0 +1,227 @@
+{% extends 'network/homeLayout.html' %}
+{% load static %}
+{% block js %}
+<script src="{% static 'js/home.js' %}"></script>
+{% endblock %}
+{% block body %}
+{% if messages %}
+{% for message in messages %}
+<div id="post-remove-alert" class="alert alert-success"><strong>Deleted!</strong> Posted Removed!</div>
+{% endfor %}
+{% endif %}
+{% if message %}
+<div id="post-remove-alert" class="alert alert-success"><strong>Posted</strong> {{ message }}</div>
+{% endif %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card card-body" id="sidebar">
+                <img class="profile-pic" src="{{user.profile.image.url}}" alt="Profile Pic" />
+                <hr />
+                <h4>
+                    <a class="profile-link" href="{% url 'profile' user.id %}">{{ user.username }}</a>
+                </h4>
+                <p>{{ user.profile.title }}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card card-body">
+                <div class="row" style="display: inline; margin: 8px">
+                    <h5>Create A Post</h5>
+                    <form method="POST" action="#">
+                        {% csrf_token %}
+                        <textarea autofocus style="margin-bottom: 10px" name="post-content" class="form-control"
+                            id="exampleFormControlTextarea1" rows="3"></textarea>
+                        <button class="btn btn-sm btn-primary">Post</button>
+                    </form>
+                </div>
+            </div>
+            <hr />
+            {% for post, count, comments in posts %}
+            <div class="card card-body">
+                <div class="post-header row">
+                    <div class="container row">
+                        <img src="{{ post.creator.profile.image.url }}" alt="profile-pic" class="profile-pic-small" />
+                        <div>
+                            <h6 style="margin-bottom: 0">
+                                <a class="profile-link"
+                                    href="{% url 'profile' post.creator.id %}">{{post.creator.username}}
+                                </a>
+                                <span class="text-muted post-date">
+                                    {{post.date_created| date:"d M"}}
+                                </span>
+                            </h6>
+
+                            <p class="user-title">{{ post.creator.profile.title }}</p>
+                        </div>
+                    </div>
+
+                    <span class="post-menu-dropdown"><i data-id="{{post.id}}" class="fa fa-ellipsis-h"
+                            onclick="showMenu(this)" aria-hidden="true"></i>
+                        <div data-id="{{post.id}}" id="post-menu-dropdown-container-{{post.id}}"
+                            class="post-menu-dropdown-container">
+                            <ul class="post-menu-dropdown-list">
+                                <li data-toggle="modal" data-target="#editPostForm-{{ post.id }}"
+                                    class="post-menu-dropdown-list-item">
+                                    Edit Post
+                                </li>
+                                <li data-toggle="modal" data-target="#deletePost-{{ post.id }}"
+                                    class="post-menu-dropdown-list-item">
+                                    Delete Post
+                                </li>
+                                <li class="post-menu-dropdown-list-item">
+                                    Follow {{post.creator.user}}
+                                </li>
+                            </ul>
+                        </div>
+                    </span>
+                </div>
+                <div class="container post-content">
+                    <p>{{ post.content }}</p>
+                </div>
+                <div class="like-comment">
+                    <i style="font-size: 15px; color: red" class="fa">&#xf004; </i>
+                    <span class="like-comment-stats text-muted">
+                        <a id="like-comment-link-{{ post.id }}" class="like-comment-link" href="#">
+                            {{ post.likedUsers.count }} liked
+                        </a>
+                        <span style="padding-left: 10px"></span>
+                        <a href="#" class="like-comment-link">{{ count }} commented</a>
+                        {% if post.isUpdated %} <span style="padding-left: 10px">
+                            Last updated {{post.dateUpdated}}</span>
+                        {% else %}
+                        <span style="padding-left: 10px">Created on {{ post.dateCreated }}</span>
+                        {% endif %}
+                    </span>
+                </div>
+                <hr style="margin-top: 5px" />
+                <ul class="list-unstyled list-inline">
+                    <li class="list-inline-item">
+                        <form>
+                            {% csrf_token %}
+                            <button data-id="{{ post.id }}" id="like-btn-{{ post.id }}"
+                                class="post-like-button btn btn-sm badge-light">
+                                <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                                Like
+                            </button>
+                        </form>
+                    </li>
+                    <li class="list-inline-item">
+                        <button data-id="{{ post.id }}" id="comment-btn-{{ post.id }}"
+                            class="post-comment-button btn btn-sm badge-light">
+                            <i class="fa fa-comment-o" aria-hidden="true"></i> Comment
+                        </button>
+                    </li>
+                </ul>
+
+                <div id="comment-section-{{ post.id }}" class="comment-section">
+                    <hr style="margin-top: 2px" />
+                    <div class="container row" class="comment-input-container">
+                        <img src="{{ user.profile.image.url }}" alt="profile-pic" class="profile-pic-smaller-comment" />
+                        <form method="POST" action=".">
+                            {% csrf_token %}
+                            <input type="hidden" name="id" value="{{ post.id }}">
+                            <input type="text" name="comment" class="comment-input" placeholder="Type a Comment" />
+                        </form>
+                    </div>
+                    <br />
+                    <h6>Comments {{ count }}</h6>
+                    <br />
+                    {% for comment in comments %}
+                    <div class="container" class="comments-container">
+                        <div class="row">
+                            <img src="{{ comment.commenter.profile.image.url }}" alt="profile-pic"
+                                class="profile-pic-smaller" />
+                            <div>
+                                <p style="margin-bottom: 0; font-size: small; font-weight: 600">
+                                    <a class="profile-link" href="{% url 'profile' post.creator.id %}">
+                                        {{ comment.commenter.username }}</a>
+                                </p>
+                                <p style="margin-bottom: 0; font-size: x-small" class="user-title">
+                                    {{ comment.commenter.profile.title }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="comment-content">{{ comment.content }}</div>
+
+                        <ul style="margin-left: 50px" class="list-inline">
+                            <form>
+                                {% csrf_token %}
+                                <span class="like-comment-span" data-id="{{ comment.id }}"><i
+                                        style="margin: 0; cursor: pointer;" class="fa fa-thumbs-o-up list-inline-item"
+                                        aria-hidden="true"></i>
+                                    <span id="like-comment-icon-{{ comment.id }}">
+                                        {{ comment.likedUsers.all | length }}
+                                    </span>
+                                </span>
+                            </form>
+                        </ul>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <br />
+            <div class="modal" id="deletePost-{{post.id}}" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h6 class="modal-title" id="exampleModalLongTitle">
+                                Delete Post
+                            </h6>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">Are you sure about deleting the post?</div>
+                        <div class="modal-footer">
+                            <a href="#"><button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+                                    Cancel
+                                </button></a>
+                            <a href="{% url 'deletePost' post.id %}"><button type="button"
+                                    class="btn btn-sm btn-primary">
+                                    Delete
+                                </button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="editPostForm-{{post.id}}" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Edit Post</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form method="POST" action="{% url 'editPost' post.id %}">
+                            <div class="modal-body">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label">Post</label>
+                                    <textarea name="content" class="form-control"
+                                        class="message-text">{{ post.content }}</textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+                                    Close
+                                </button>
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                    Submit
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div style="margin-top: 400px"></div>
+</div>
+
+{% endblock %}

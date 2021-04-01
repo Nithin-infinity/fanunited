@@ -1,0 +1,50 @@
+{% extends 'network/homeLayout.html' %}
+
+
+{% load static %}
+
+
+{% block body %}
+{% for post in posts %}
+<div class="container">
+    <h5 style="margin-left: 10px;">Posts by Users You follow</h5>
+    <br>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card card-body">
+                <div id="post-head" class="row">
+                    <img src="{{ post.creator.profile.image.url }}" alt="profile-pic" class="profile-pic-small">
+                    <div>
+                        <h6><a class="profile-link" href="{% url 'profile' post.creator.id %}"></a>
+                            {{post.creator.username}}</a></h6>
+                        <p class="user-title">{{ post.creator.profile.title }}</p>
+                    </div>
+                </div>
+                <div class="container post-content">
+                    <p>{{ post.content }}</p>
+                </div>
+                <div class="like-comment">
+                    <i style="font-size:15px;color:red" class="fa">&#xf004; </i>
+                    <span class="like-comment-stats text-muted"><a class="like-comment-link" href="#">23 liked </a><span
+                            style="padding-left:10px"></span>
+                        <a href="#" class="like-comment-link">234
+                            commented</a></span>
+
+                </div>
+                <hr style="margin-top: 5px;">
+                <ul class="list-unstyled list-inline">
+
+                    <li class="list-inline-item"> <button class="btn btn-sm badge-light"><i class="fa fa-thumbs-o-up"
+                                aria-hidden="true"></i>
+                            Like</button></li>
+                    <li class="list-inline-item"><button class="btn btn-sm badge-light"><i class="fa fa-comment-o"
+                                aria-hidden="true"></i> Comment</button></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+<br>
+{% endfor %}
+{% endblock %}

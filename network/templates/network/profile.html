@@ -1,0 +1,174 @@
+{% extends 'network/homeLayout.html' %}
+
+{% load static %}
+{% block js %}
+<script src="{% static 'js/profile.js' %}"></script>
+{% endblock %}
+{% block body %}
+{% if messages %}
+{% for message in messages %}
+<div id="post-remove-alert" class="alert alert-success"><strong>Deleted!</strong> Posted Removed!</div>
+{% endfor %}
+{% endif %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-7">
+            <div class="card card-body profile-card">
+                <div id="profile-head">
+                    <img id="profile-pic-left" src="{{ profile.image.url }}" alt="Profile Picture">
+
+                    <span style="margin: 0px 10px 0px 10px;" class="badge-lg">
+                        Following <span id="following-count" class="badge badge-light">
+                            {{ profile.following.all | length }}</span>
+                    </span>
+                    <span class="badge-lg">
+                        Followers <span id="follower-count" class="badge badge-light">
+                            {{ profile.user.followers.all | length }}</span>
+                    </span>
+
+                </div>
+                <br>
+                <div class="container" id="profile-info-display">
+                    <div class="edit-profile">
+                        <h5 class="edit-profile">{{ profile.user.username }}</h5>
+                        {% if user == profile.user %}
+                        <a href="#" id="edit-profile-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
+                            </svg>
+                        </a>
+                        {% else %}
+                        <form>
+                            {% csrf_token %}
+                            <button id="btn-follow" data-id={{profile.id}} onclick="follow(this)"
+                                class="btn btn-sm btn-primary">
+                                {{ follow }}
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                    <h6>{{profile.title}}</h6>
+                    <h6 class="text-muted">Bangalore, Karnataka India</h6>
+                    <br>
+                    <h6 class="text-sm">Born - {{profile.dob}} </h6>
+                    <br>
+                    <h6>About</h6>
+                    <p>{{profile.about}} </p>
+                    <a href="{% url 'passwordRest' profile.user.id %}"><button
+                            class="btn btn-sm btn-outline-primary">Reset Password</button></a>
+
+                </div>
+                <form id="profile-info-edit" method="POST" action="." enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in userForm %}
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">{{ field.label_tag }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+
+                        <div class="alert alert-danger alert-dismissible form-error-alert" role="alert">
+                            <span>{{ field.errors }}</span>
+                        </div>
+
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    {% for field in profileForm %}
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">{{ field.label_tag }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                        <div class="alert alert-danger alert-dismissible col-12 mx-1" role="alert">
+                            <div id="form_errors">
+                                {% for key, value in userForm.errors.items %}
+                                <span class="fieldWrapper">
+                                    {{ key }}:{{ value }}
+                                </span>
+                                {% endfor %}
+                            </div>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <button id="profile-form-submit" type="submit" class="btn btn-primary btn-sm">Submit</button>
+                </form>
+
+
+                <!-- <form id="profile-info-edit">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Name</label>
+                        <input type="text" class="form-control form-control-sm" id="exampleInputEmail1"
+                            aria-describedby="emailHelp" placeholder="Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Email Address</label>
+                        <input type="email" class="form-control form-control-sm" placeholder="Email Address">
+                    </div>
+                    <div class="form-group">
+                        <label>DOB</label>
+                        <input type="date" class="form-control form-control-sm">
+                    </div>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" class="form-control form-control-sm">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleFormControlTextarea1">About</label>
+                        <textarea class="form-control form-control-sm" id="exampleFormControlTextarea1"
+                            rows="3"></textarea>
+                    </div>
+                    <button id="profile-form-submit" type="submit" class="btn btn-primary btn-sm">Submit</button>
+                </form> -->
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-body">
+
+
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-7">
+            <div class="card card-body">
+                <h4 style="padding: 20px 0 0 20px ;">Your Posts</h4>
+                <br>
+                {% for post in posts %}
+                <div class="card-body">
+                    <div id="post-head" class="row">
+                        <img src="{{ post.creator.profile.image.url }}" alt="profile-pic" class="profile-pic-small">
+                        <div>
+                            <h6><a class="profile-link" href="{% url 'profile' post.creator.id %}">
+                                    {{post.creator.username}}</a></h6>
+                            <p class="user-title">{{post.creator.profile.title }}</p>
+                        </div>
+                    </div>
+                    <div class="container">
+                        {{ post.content }}
+                    </div>
+                    <hr>
+                    <ul class="list-unstyled list-inline">
+
+                        <li class="list-inline-item"> <button class="btn btn-sm badge-light"><i
+                                    class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                                Like</button></li>
+                        <li class="list-inline-item"><button class="btn btn-sm badge-light"><i class="fa fa-comment-o"
+                                    aria-hidden="true"></i> Comment</button></li>
+                    </ul>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="margin-top: 407px;"></div>
+
+
+{% endblock %}
