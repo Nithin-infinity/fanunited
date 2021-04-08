@@ -2,7 +2,7 @@
 
 {% load static %}
 {% block js %}
-<script src="{% static 'js/profile.js' %}"></script>
+<script src="{% static 'js/home.js' %}"></script>
 {% endblock %}
 {% block body %}
 {% if messages %}
@@ -49,13 +49,19 @@
                         </form>
                         {% endif %}
                     </div>
+                    {% if profile.title %}
                     <h6>{{profile.title}}</h6>
-                    <h6 class="text-muted">Bangalore, Karnataka India</h6>
+                    {% endif %}
+                    <h6>Bangalore, Karnataka India</h6>
                     <br>
+                    {% if profile.dob %}
                     <h6 class="text-sm">Born - {{profile.dob}} </h6>
+                    {% endif %}
                     <br>
+                    {% if profile.about %}
                     <h6>About</h6>
                     <p>{{profile.about}} </p>
+                    {% endif %}
                     <a href="{% url 'passwordRest' profile.user.id %}"><button
                             class="btn btn-sm btn-outline-primary">Reset Password</button></a>
 
@@ -134,38 +140,15 @@
         </div>
     </div>
     <br>
-    <div class="row">
-        <div class="col-md-7">
-            <div class="card card-body">
-                <h4 style="padding: 20px 0 0 20px ;">Your Posts</h4>
-                <br>
-                {% for post in posts %}
-                <div class="card-body">
-                    <div id="post-head" class="row">
-                        <img src="{{ post.creator.profile.image.url }}" alt="profile-pic" class="profile-pic-small">
-                        <div>
-                            <h6><a class="profile-link" href="{% url 'profile' post.creator.id %}">
-                                    {{post.creator.username}}</a></h6>
-                            <p class="user-title">{{post.creator.profile.title }}</p>
-                        </div>
-                    </div>
-                    <div class="container">
-                        {{ post.content }}
-                    </div>
-                    <hr>
-                    <ul class="list-unstyled list-inline">
 
-                        <li class="list-inline-item"> <button class="btn btn-sm badge-light"><i
-                                    class="fa fa-thumbs-o-up" aria-hidden="true"></i>
-                                Like</button></li>
-                        <li class="list-inline-item"><button class="btn btn-sm badge-light"><i class="fa fa-comment-o"
-                                    aria-hidden="true"></i> Comment</button></li>
-                    </ul>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
+    <div class="col-md-7">
+        <h4 style="padding: 20px 0 0 20px ;">Your Posts</h4>
+        <br>
+        {% for post, count, comments in posts %}
+        {% include 'network/postView.html' %}
+        {% endfor %}
     </div>
+
 </div>
 
 <div style="margin-top: 407px;"></div>

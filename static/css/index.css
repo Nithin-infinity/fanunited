@@ -4,6 +4,21 @@ body {
   padding: none;
 }
 
+.navbar {
+  /* background-color: rgb(212, 75, 60); */
+  background-image: linear-gradient(
+    to right,
+    rgb(207, 31, 31),
+    rgb(172, 40, 40)
+  );
+  font-weight: 400;
+}
+
+.navbar-brand,
+.nav-item .nav-link {
+  color: white;
+}
+
 .profile-link {
   color: black;
 }
@@ -113,6 +128,7 @@ button:hover {
 }
 
 .post-content {
+  margin-top: 12px;
   font-size: 16px;
 }
 
@@ -156,9 +172,10 @@ button:hover {
 }
 
 .comment-input {
+  position: relative;
   border-radius: 40px;
   outline: none;
-  width: 200%;
+  width: 150%;
   height: 38px;
   padding-left: 20px;
 }
@@ -173,13 +190,14 @@ button:hover {
 }
 
 .post-date {
+  margin-left: 6px;
   font-size: small;
   font-weight: 500;
 }
 
-.post-header {
+/* .post-header {
   display: flex;
-}
+} */
 
 .post-menu-dropdown {
   cursor: pointer;
@@ -215,7 +233,7 @@ button:hover {
   background-color: rgb(238, 238, 248);
 }
 
-#post-remove-alert,
+#post-alert,
 #password-reset-alert {
   position: fixed;
   left: 610px;
@@ -224,7 +242,7 @@ button:hover {
   padding-left: 5px;
   margin-left: auto;
   margin-right: auto;
-  width: 200px;
+  min-width: 150px;
   height: 30px;
   font-size: small;
   text-align: center;

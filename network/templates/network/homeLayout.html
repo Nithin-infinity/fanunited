@@ -16,14 +16,14 @@
 </head>
 
 <body>
-    <nav class="sticky-top navbar navbar-expand-md navbar-light bg-white py-1">
+    <nav class="sticky-top navbar navbar-expand-md py-1">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse mx-auto" id="navbarNav">
             <ul class="navbar-nav mx-auto">
-                <a class="navbar-brand mx-auto" href="{% url 'home' %}">Network </a>
+                <a class="navbar-brand mx-auto" href="{% url 'home' %}">FanUnited </a>
                 <div style="width: 30px;"></div>
                 <li class="nav-item active">
                     <a class="nav-link" href="{% url 'profile' user.id %}">Profile</a>
@@ -35,8 +35,9 @@
 
                 <div style="width: 200px;"></div>
                 <form class="nav-item form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    <input class="form-control form-control-sm mr-sm-2" type="search" placeholder="Search"
+                        aria-label="Search">
+                    <button class="btn btn-sm btn-outline p-sm-1 ml-1 mr-2" type="submit">Search</button>
                 </form>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'logout' %}">Logout</a>

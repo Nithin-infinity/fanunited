@@ -25,13 +25,12 @@ def index(request):
         if request.POST.get('post-content', False):
             post = Post.objects.create(content=request.POST['post-content'], creator=request.user)
             post.save()
-            message = 'Added a new Post'
+            messages.success(request, 'Created New Post')
     posts = Post.objects.all()
     comments = [[comment for comment in post.comments.all()] for post in posts][::-1]
     commenterCount = ([len(set([comment.commenter for comment in post.comments.all() ])) for post in posts])[::-1]
     return render(request, "network/home.html", {
         'posts' : zip(posts[::-1],commenterCount, comments),
-        'message' : message
     })
 
 def loginView(request):
@@ -88,9 +87,11 @@ def profileView(request, id):
     user = User.objects.get(id=id)
     userPosts = Post.objects.filter(creator=user)
     followAction = 'unfollow' if user in request.user.profile.following.all() else 'follow'
+    comments = [[comment for comment in post.comments.all()] for post in userPosts][::-1]
+    commenterCount = ([len(set([comment.commenter for comment in post.comments.all() ])) for post in userPosts])[::-1]
     return render(request, 'network/profile.html', {
         'profile' : user.profile,
-        'posts' : userPosts,
+        'posts' : zip(userPosts[::-1], commenterCount, comments),
         'follow' : followAction,
         'userForm' : userForm,
         'profileForm' : profileForm
@@ -100,8 +101,10 @@ def profileView(request, id):
 def followingView(request):
     followings = request.user.profile.following.all()
     followingPosts = [post for following in followings for post in following.posts.all()]
+    comments = [[comment for comment in post.comments.all()] for post in followingPosts][::-1]
+    commenterCount = ([len(set([comment.commenter for comment in post.comments.all() ])) for post in followingPosts])[::-1]
     return render(request, 'network/following.html', {
-        'posts': followingPosts[::-1]
+        'posts': zip(followingPosts[::-1], commenterCount, comments)
     })
 
 def likePostView(request, id):
@@ -118,15 +121,17 @@ def likePostView(request, id):
 def deletePost(request, id):
     post = Post.objects.get(id=id)
     post.delete()
-    messages.success(request, 'Post Deleted Successfully')
+    messages.success(request, 'Post Removed')
     return redirect('home')
 
 @login_required(login_url='login')
 def editPost(request, id):
     post = Post.objects.get(id=id)
     form = PostForm(request.POST, instance=post)
+    
     if form.is_valid():
         form.save()
+        messages.success(request, 'Post Edited')
     return redirect('home')
 
 @login_required(login_url='login')

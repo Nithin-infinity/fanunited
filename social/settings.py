@@ -125,14 +125,26 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+## Development Settings ------------------------------------------------------------
 
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# STATIC_URL = 'static/'
+
+# MEDIA_URL = 'media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static'),
+# ]
+
+
+## s3 Settings----------------------------------------------------------------------
 
 MEDIA_URL = 'static/images/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'network/static'),
-# ]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 AWS_ACCESS_KEY_ID = 'AKIAQJQBAD5S7TKI3WUG'
 AWS_SECRET_ACCESS_KEY = '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'
